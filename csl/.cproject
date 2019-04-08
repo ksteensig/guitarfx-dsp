@@ -15,9 +15,9 @@
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 				<configuration artifactExtension="lib" artifactName="C55XXCSL_LP" buildProperties="" description="" id="com.ti.ccstudio.buildDefinitions.C5500.Debug.1599296540" name="Debug" parent="com.ti.ccstudio.buildDefinitions.C5500.Debug">
 					<folderInfo id="com.ti.ccstudio.buildDefinitions.C5500.Debug.1599296540.1819067413" name="/" resourcePath="">
-						<toolChain id="com.ti.ccstudio.buildDefinitions.C5500_4.4.libraryDebugToolchain.789068125" name="TI Build Tools" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.libraryDebugToolchain" targetTool="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.librarianDebug.1784972441">
-							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.2000830204" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS" valueType="stringList">
-								<listOptionValue builtIn="false" value="DEVICE_CONFIGURATION_ID=TMS320C55XX.TMS320C5535"/>
+						<toolChain id="com.ti.ccstudio.buildDefinitions.C5500_4.4.libraryDebugToolchain.723690330" name="TI Build Tools" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.libraryDebugToolchain" targetTool="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.librarianDebug.1787965099">
+							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.2049062357" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS" valueType="stringList">
+								<listOptionValue builtIn="false" value="DEVICE_CONFIGURATION_ID=TMS320C55XX.TMS320C5535.EZDSP5535"/>
 								<listOptionValue builtIn="false" value="DEVICE_ENDIANNESS=big"/>
 								<listOptionValue builtIn="false" value="OUTPUT_FORMAT=COFF"/>
 								<listOptionValue builtIn="false" value="DSPBIOS_VERSION=5.42.2.10"/>
@@ -28,19 +28,19 @@
 								<listOptionValue builtIn="false" value="RUNTIME_SUPPORT_LIBRARY="/>
 								<listOptionValue builtIn="false" value="OUTPUT_TYPE=bios5Application:staticLibrary"/>
 							</option>
-							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION.1197061749" name="Compiler version" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION" value="4.4.1" valueType="string"/>
-							<targetPlatform id="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.targetPlatformDebug.1835490115" name="Platform" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.targetPlatformDebug"/>
-							<builder buildPath="${BuildDirectory}" id="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.builderDebug.1438821709" keepEnvironmentInBuildfile="false" name="GNU Make" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.builderDebug"/>
-							<tool id="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.compilerDebug.1420856924" name="C5500 Compiler" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.compilerDebug">
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DEFINE.2064838203" name="Pre-define NAME (--define, -D)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DEFINE" valueType="definedSymbols">
+							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION.731669303" name="Compiler version" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION" value="4.4.1" valueType="string"/>
+							<targetPlatform id="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.targetPlatformDebug.1143149625" name="Platform" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.targetPlatformDebug"/>
+							<builder buildPath="${BuildDirectory}" id="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.builderDebug.17215484" keepEnvironmentInBuildfile="false" name="GNU Make" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.builderDebug"/>
+							<tool id="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.compilerDebug.703578504" name="C5500 Compiler" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.compilerDebug">
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DEFINE.788581670" name="Pre-define NAME (--define, -D)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DEFINE" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;_DEBUG&quot;"/>
 									<listOptionValue builtIn="false" value="c5535"/>
 								</option>
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.MEMORY_MODEL.109011514" name="Specify memory model (small/large/huge) (--memory_model)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.MEMORY_MODEL" value="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.MEMORY_MODEL.large" valueType="enumerated"/>
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.PTRDIFF_SIZE.1723826798" name="Specify type size to hold results of pointer math (--ptrdiff_size)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.PTRDIFF_SIZE" value="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.PTRDIFF_SIZE.16" valueType="enumerated"/>
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.SILICON_VERSION.1135221853" name="device+optional revision of target silicon (--silicon_version, -v)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.SILICON_VERSION" value="5505" valueType="string"/>
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DEBUGGING_MODEL.1126913124" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DEBUGGING_MODEL" value="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.INCLUDE_PATH.406061479" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.INCLUDE_PATH" valueType="includePath">
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.MEMORY_MODEL.1256402127" name="Specify memory model (small/large/huge) (--memory_model)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.MEMORY_MODEL" value="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.MEMORY_MODEL.large" valueType="enumerated"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.PTRDIFF_SIZE.1360336299" name="Specify type size to hold results of pointer math (--ptrdiff_size)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.PTRDIFF_SIZE" value="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.PTRDIFF_SIZE.16" valueType="enumerated"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.SILICON_VERSION.1261940027" name="device+optional revision of target silicon (--silicon_version, -v)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.SILICON_VERSION" value="5535" valueType="string"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DEBUGGING_MODEL.1071045171" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DEBUGGING_MODEL" value="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.INCLUDE_PATH.1534802742" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.INCLUDE_PATH" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${CG_TOOL_ROOT}/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${BIOS_INCLUDE_DIR}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${RTDX_INCLUDE_DIR}&quot;"/>
@@ -51,22 +51,22 @@
 									<listOptionValue builtIn="false" value="${BIOS_INCLUDE_DIR}"/>
 									<listOptionValue builtIn="false" value="${RTDX_INCLUDE_DIR}"/>
 								</option>
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DIAG_WARNING.885048992" name="Treat diagnostic &lt;id&gt; as warning (--diag_warning, -pdsw)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DIAG_WARNING" valueType="stringList">
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DIAG_WARNING.89456023" name="Treat diagnostic &lt;id&gt; as warning (--diag_warning, -pdsw)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DIAG_WARNING" valueType="stringList">
 									<listOptionValue builtIn="false" value="225"/>
 								</option>
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.ALGEBRAIC.293024931" name="Codegen outputs algebraic assembly (--algebraic, -mg)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.ALGEBRAIC" value="true" valueType="boolean"/>
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.ASM_SOURCE.766022116" name="Select assembly source language (--asm_source)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.ASM_SOURCE" value="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.ASM_SOURCE.algebraic" valueType="enumerated"/>
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DIRECTORY_MODE.1639618292" name="Mode" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DIRECTORY_MODE" value="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DIRECTORY_MODE.manual" valueType="enumerated"/>
-								<inputType id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__C_SRCS.62359121" name="C Sources" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__C_SRCS"/>
-								<inputType id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__CPP_SRCS.23311392" name="C++ Sources" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__CPP_SRCS"/>
-								<inputType id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__ASM_SRCS.850519382" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__ASM_SRCS"/>
-								<inputType id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__ASM2_SRCS.925474292" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__ASM2_SRCS"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.ALGEBRAIC.321479485" name="Codegen outputs algebraic assembly (--algebraic, -mg)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.ALGEBRAIC" value="true" valueType="boolean"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.ASM_SOURCE.1384749170" name="Select assembly source language (--asm_source)" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.ASM_SOURCE" value="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.ASM_SOURCE.algebraic" valueType="enumerated"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DIRECTORY_MODE.925342943" name="Mode" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DIRECTORY_MODE" value="com.ti.ccstudio.buildDefinitions.C5500_4.4.compilerID.DIRECTORY_MODE.manual" valueType="enumerated"/>
+								<inputType id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__C_SRCS.984428900" name="C Sources" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__C_SRCS"/>
+								<inputType id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__CPP_SRCS.1402343677" name="C++ Sources" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__CPP_SRCS"/>
+								<inputType id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__ASM_SRCS.241112144" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__ASM_SRCS"/>
+								<inputType id="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__ASM2_SRCS.1438715698" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.compiler.inputType__ASM2_SRCS"/>
 							</tool>
-							<tool id="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.librarianDebug.1784972441" name="C5500 Archiver" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.librarianDebug">
-								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.archiverID.OUTPUT_FILE.1427949085" name="Output file" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.archiverID.OUTPUT_FILE" value="C55XXCSL_LP.lib" valueType="string"/>
+							<tool id="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.librarianDebug.1787965099" name="C5500 Archiver" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.library.librarianDebug">
+								<option id="com.ti.ccstudio.buildDefinitions.C5500_4.4.archiverID.OUTPUT_FILE.1839722497" name="Output file" superClass="com.ti.ccstudio.buildDefinitions.C5500_4.4.archiverID.OUTPUT_FILE" value="C55XXCSL_LP.lib" valueType="string"/>
 							</tool>
-							<tool id="com.ti.rtsc.buildDefinitions.DSPBIOS_5.42.tool.1142202595" name="TConf" superClass="com.ti.rtsc.buildDefinitions.DSPBIOS_5.42.tool">
-								<inputType id="com.ti.rtsc.buildDefinitions.DSPBIOS_5.42.tool.inputType__TCF.1795974071" name="TConf Scripts" superClass="com.ti.rtsc.buildDefinitions.DSPBIOS_5.42.tool.inputType__TCF"/>
+							<tool id="com.ti.rtsc.buildDefinitions.DSPBIOS_5.42.tool.267846839" name="TConf" superClass="com.ti.rtsc.buildDefinitions.DSPBIOS_5.42.tool">
+								<inputType id="com.ti.rtsc.buildDefinitions.DSPBIOS_5.42.tool.inputType__TCF.440372347" name="TConf Scripts" superClass="com.ti.rtsc.buildDefinitions.DSPBIOS_5.42.tool.inputType__TCF"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
