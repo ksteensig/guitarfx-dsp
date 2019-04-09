@@ -25,13 +25,16 @@ unsigned long int i = 0;
 /* New. Variable for step */
 unsigned int Step = 1;
 
-interrupt void myIsr() {
+inline void myIsr() {
     //dummy = I2S2_W0_LSW_R;              // Read Least Significant Word (ignore)
     //dummy = I2S2_W1_LSW_R;
     I2S2_W0_MSW_W = I2S2_W0_MSW_R;         // Left output
     I2S2_W1_MSW_W = I2S2_W1_MSW_R;        // Right output
     //I2S2_W0_LSW_W = 0;
     //I2S2_W1_LSW_W = 0;
+
+    //__asm(" NOP ");
+    __asm(" RETI ");
 }
 
 
