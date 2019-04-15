@@ -37,7 +37,6 @@ MEMORY
   SARAM2 (RWIX): origin = 0x040000, length = 0x00FE00  /*  64KB */
   VECS   (RWIX): origin = 0x04FE00, length = 0x000200  /*  512B */
   PDROM   (RIX): origin = 0xff8000, length = 0x008000  /*  32KB */
-  SARAM3 (RWIX): origin =
  PAGE 2:  /* -------- 64K-word I/O Address Space -------- */
 
   IOPORT (RWI) : origin = 0x000000, length = 0x020000
@@ -67,8 +66,5 @@ SECTIONS
 
    .ioport   >  IOPORT PAGE 2         /* Global & static ioport vars */
 
-   .sutminpikron > SARAM3
-
-
-
+   BUFFER 	 >  SARAM1
 }

@@ -7,8 +7,6 @@
 #include <csl_intc.h>
 #include <csl_dma.h>
 
-#include "ring_buffer_test.asm"
-
 volatile Int16 dummy;
 volatile Int16 left_input;
 volatile Int16 right_input;
@@ -27,7 +25,10 @@ unsigned long int i = 0;
 /* New. Variable for step */
 unsigned int Step = 1;
 
-inline void myIsr() {
+extern void ringBuffer();
+extern void echoUpdate();
+
+interrupt void myIsr() {
     //dummy = I2S2_W0_LSW_R;              // Read Least Significant Word (ignore)
     //dummy = I2S2_W1_LSW_R;
     //I2S2_W0_MSW_W = I2S2_W0_MSW_R;         // Left output
@@ -35,10 +36,17 @@ inline void myIsr() {
     //I2S2_W0_LSW_W = 0;
     //I2S2_W1_LSW_W = 0;
 
-    _echoUpdate();
+    __asm(" MOV *(#002A2Dh), AR0 ");
+
+    echoUpdate();
+
+    __asm(" AMOV #002A0Dh, XAR1 ");
+    __asm(" MOV AR0, *AR1 ");
+
+    //__asm(" AMOV #, XAR1 ");
+    //__asm(" AMOV XAR0, *XAR1 ");
 
     //__asm(" NOP ");
-    __asm(" RETI ");
 }
 
 
@@ -98,6 +106,8 @@ void main( void )
     CSL_DMA_Handle = DMA_open(CSL_DMA_CHAN1, &dmaCodecUL_Obj, &status);
     DMA_config(hDMA_CodecUL, &dmaConfig);
   */
+
+    ringBuffer();
 
     Uint32 vec;
 
