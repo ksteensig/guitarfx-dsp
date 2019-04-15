@@ -7,6 +7,8 @@
 #include <csl_intc.h>
 #include <csl_dma.h>
 
+#include "ring_buffer_test.asm"
+
 volatile Int16 dummy;
 volatile Int16 left_input;
 volatile Int16 right_input;
@@ -28,10 +30,12 @@ unsigned int Step = 1;
 inline void myIsr() {
     //dummy = I2S2_W0_LSW_R;              // Read Least Significant Word (ignore)
     //dummy = I2S2_W1_LSW_R;
-    I2S2_W0_MSW_W = I2S2_W0_MSW_R;         // Left output
-    I2S2_W1_MSW_W = I2S2_W1_MSW_R;        // Right output
+    //I2S2_W0_MSW_W = I2S2_W0_MSW_R;         // Left output
+    //I2S2_W1_MSW_W = I2S2_W1_MSW_R;        // Right output
     //I2S2_W0_LSW_W = 0;
     //I2S2_W1_LSW_W = 0;
+
+    _echoUpdate();
 
     //__asm(" NOP ");
     __asm(" RETI ");
