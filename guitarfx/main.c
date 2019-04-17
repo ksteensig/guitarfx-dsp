@@ -25,30 +25,8 @@ unsigned long int i = 0;
 /* New. Variable for step */
 unsigned int Step = 1;
 
-extern void ringBuffer();
-extern void echoUpdate();
-
-interrupt void myIsr() {
-    //dummy = I2S2_W0_LSW_R;              // Read Least Significant Word (ignore)
-    //dummy = I2S2_W1_LSW_R;
-    //I2S2_W0_MSW_W = I2S2_W0_MSW_R;         // Left output
-    //I2S2_W1_MSW_W = I2S2_W1_MSW_R;        // Right output
-    //I2S2_W0_LSW_W = 0;
-    //I2S2_W1_LSW_W = 0;
-
-    __asm(" MOV *(#002A2Dh), AR0 ");
-
-    echoUpdate();
-
-    __asm(" AMOV #002A0Dh, XAR1 ");
-    __asm(" MOV AR0, *AR1 ");
-
-    //__asm(" AMOV #, XAR1 ");
-    //__asm(" AMOV XAR0, *XAR1 ");
-
-    //__asm(" NOP ");
-}
-
+extern interrupt void isr_func();
+extern void ring_buffer();
 
 /* ------------------------------------------------------------------------ *
  *                                                                          *
@@ -107,12 +85,14 @@ void main( void )
     DMA_config(hDMA_CodecUL, &dmaConfig);
   */
 
-    ringBuffer();
+    //__asm(" AMOV #020000h, XAR6 ");
+
+    ring_buffer();
 
     Uint32 vec;
 
     IRQ_setVecs(((Uint32)&vec) << 1);
-    IRQ_plug(15, &myIsr);
+    IRQ_plug(15, &isr_func);
     IRQ_enable(15);
     IRQ_globalEnable();
 
