@@ -7,6 +7,9 @@
 
 #include "com_interface.h"
 
+CSL_I2cConfig       COMS_I2C_config;
+CSL_I2cSetup        COMS_I2C_setup;
+
 void COMS_SetupI2C(Uint16 slaveAddress){
     CSL_Status status; // Used to escape if an error occurs
     Uint16             startStop; // What is this
