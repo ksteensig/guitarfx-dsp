@@ -40,6 +40,10 @@ MEMORY
  PAGE 2:  /* -------- 64K-word I/O Address Space -------- */
 
   IOPORT (RWI) : origin = 0x000000, length = 0x020000
+
+ PAGE 3:
+  COM_CONFIG_TEMP (RWIX): origin = 0x030000, length = 0x000800 /* 1KB - Arduino Com Interface */
+  COM_CONFIG	  (RWIX): origin = 0x030800, length = 0x000800 /* 1KB - Actual Config with all parameters from Arduino */
 }
  
 /* SPECIFY THE SECTIONS ALLOCATION INTO MEMORY */

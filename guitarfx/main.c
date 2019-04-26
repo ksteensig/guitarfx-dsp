@@ -1,3 +1,4 @@
+#include "com_interface.h" // Used for communicating with Arduino
 #include <stdio.h>
 #include <usbstk5505.h>
 #include <aic3204.h>
