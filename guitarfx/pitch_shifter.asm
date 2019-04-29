@@ -73,50 +73,60 @@ _time_stretch:
 										; Window the sample
   SFTS AC0, #16
   MPY AC1, AC0
+  SFTS #1, AC0
   MPY #WINDOW_SCALE_FACTOR, AC0
   SFTS AC0, #-15
-  MOV AC0, *AR4+
-ps_loop1_end: ADD #1, AR4
+
+  MOV AC0, *AR4+						; Move windowed sample back into FFT buffer
+ps_loop1_end: ADD #1, AR4				; Every other sample in the FFT buffer is imaginary, so this is skipped
+
                                         ; FFT the frame
-  SUB #2048, AR4
-  MOV #1024, T0
+  SUB #2048, AR4						; Go back to beginning of the FFT buffer
+  MOV #1024, T0							; Use 1024-point FFT
   CALL _cfft_SCALE                      ; Best performance with twiddle in ROM and FFT_BUF in DARAM
 
-                                        ; Calculate magnitude frame
-  MOV #MAGNITUDE_FRAME_START, AR0
-  MOV #1023, BRC0
+                                        ; Calculate magnitude frame, which is the abs() of each value in the FFT buffer
+  MOV #MAGNITUDE_FRAME_START, AR0		; Create pointer to magnitude frame
+  MOV #1023, BRC0						; Loop 1024 times over magnitude frame
   RPTBLOCAL mag_frame_loop_end
-  MOV *AR4+, AC0
-  MOV *AR4+, AC1
-  SQR AC0
+  MOV *AR4+, AC0						; Move real part of the FFT buffer into AC0
+  MOV *AR4+, AC1						; Move imaginary part of the FFT buffer into AC1
+
+  SQR AC0								; Square both the real and imaginary
   SQR AC1
-  ADD AC1, AC0
+  SFTS AC0, #-15
+  SFTS AC1, #-15
+
+  ADD AC1, AC0							; Add the squared real and squared imaginary
 mag_frame_loop_end: MOV AC0, *AR0+
-  CALL _sqrt_16                         ; Call sqrt on all magnitude frame members
+  CALL _sqrt_16                         ; Call sqrt on all magnitude frame members, this finishes the abs()
 
                                         ; Calculate the phase frame, the angles for each sample
-  MOV #ATAN2_R, AR0
-  MOV #ATAN2_J, AR1
-  SUB #2048, AR4
-  MOV #1023, BRC0                       ; Another 1024 iterations
+                                        ; This is done by doing atan2(j/r)
+  MOV #ATAN2_R, AR0						; Make pointer to buffer where all real FFT values can be copied into
+  MOV #ATAN2_J, AR1						; Make pointer to buffer where all imaginary FFT values can be copied into
+  SUB #2048, AR4						; Go back to beginning of FFT buffer
+  MOV #1023, BRC0                       ; Iterate 1024 times
   RPTBLOCAL ps_loop2_end
-  MOV *AR4+, *AR0+
-ps_loop2_end: MOV *AR4+, *AR1+
+  MOV *AR4+, *AR0+						; Copy real sample into real buffer
+ps_loop2_end: MOV *AR4+, *AR1+			; Copy imaginary sample into imaginary buffer
   MOV #ATAN2_R, AR0                     ; Set pointers back to beginning
   MOV #ATAN2_J, AR1
   MOV #PHASE_FRAME_START, AR2
   MOV #1024, T0
-  CALL _atan16
+  CALL _atan16							; Calculate the phase by using atan
+
                                         ; Calculate delta phi
-  MOV 1023, BRC0
-  MOV #DELTA_PHI_START, AR0
-  MOV #PHASE_FRAME_START, AR1
-  MOV #PREV_PHASE_FRAME_START, AR2
-  MOV #BIT_REV_INDEX_START, AR3
+  MOV 1023, BRC0						; Loop 1024 times
+  MOV #DELTA_PHI_START, AR0				; Make pointer to delta phi buffer
+  MOV #PHASE_FRAME_START, AR1			; Make pointer to phase frame buffer
+  MOV #PREV_PHASE_FRAME_START, AR2		; Make pointer to last iteration's phase frame buffer
+  MOV #BIT_REV_INDEX_START, AR3			; Make pointer to a list of bit reversed index values
 
   RPTBLOCAL ps_loop3_end
-  MOV *AR0, AC0
-  MOV #HOP_SIZE, AC0
+  										  ; SFTS the following block at some point
+  MOV *AR3, AC0
+  MPY #HOP_SIZE, AC0
   MPY #DELTA_PHI_CONST, AC0
   MPY *AR3+, AC0
   NEG AC0
@@ -129,13 +139,14 @@ ps_loop2_end: MOV *AR4+, *AR1+
   MOV AC0, T0
 ps_loop3_end: MOV T1, *AR0+
 
-  MOV #1023, BRC0
+  MOV #1023, BRC0						; Loop 1024 times
   SUB 1024, AR0                         ; Go back to beginning of delta phi vector
-  MOV #TRUE_FREQ_START, AR1
+  MOV #TRUE_FREQ_START, AR1				; Get pointer to true frequency
   SUB #1024, AR3                        ; Go back to beginning of bit reversed index vector
   
   RPTBLOCAL ps_loop4_end
   MOV #DELTA_PHI_CONST, AC0
+  STFS AC0, #16
   MPY *AR3+, AC0
   MOV *AR0+, AC1
   MPY #INV_HOP_SIZE_Q15, AC1
