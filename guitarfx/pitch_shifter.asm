@@ -91,15 +91,10 @@ ps_loop1_end: ADD #1, AR4				; Every other sample in the FFT buffer is imaginary
   MOV #MAGNITUDE_FRAME_START, AR0		; Create pointer to magnitude frame
   MOV #1023, BRC0						; Loop 1024 times over magnitude frame
   RPTBLOCAL mag_frame_loop_end
-  MOV *AR4+, AC0						; Move real part of the FFT buffer into AC0
-  MOV *AR4+, AC1						; Move imaginary part of the FFT buffer into AC1
+  SQRM *AR4+, AC0						; Move and square real part of the FFT buffer into AC0
+  SQAM *AR4+, AC0, AC0					; Move and square imaginary part of the FFT buffer into AC0
 
-  SQR AC0								; Square both the real and imaginary
-  SQR AC1
   SFTS AC0, #-15
-  SFTS AC1, #-15
-
-  ADD AC1, AC0							; Add the squared real and squared imaginary
 mag_frame_loop_end: MOV AC0, *AR0+
   CALL _sqrt_16                         ; Call sqrt on all magnitude frame members, this finishes the abs()
 
@@ -118,56 +113,62 @@ ps_loop2_end: MOV *AR4+, *AR1+			; Copy imaginary sample into imaginary buffer
   MOV #1024, T0
   CALL _atan16							; Calculate the phase by using atan
 
+
                                         ; Calculate delta phi
   MOV 1023, BRC0						; Loop 1024 times
   MOV #DELTA_PHI_START, AR0				; Make pointer to delta phi buffer
   MOV #PHASE_FRAME_START, AR1			; Make pointer to phase frame buffer
   MOV #PREV_PHASE_FRAME_START, AR2		; Make pointer to last iteration's phase frame buffer
-  MOV #0, T1							; Start index counter
+  MOV #0, T0							; Start index counter
 
   RPTBLOCAL ps_loop3_end
-  										  ; SFTS the following block at some point
-  MOV T1, AC0							  ; AC0 = i
+  MOV T0, HI(AC0)						  ; AC0 = i
+  ADD #1, T0
   										  ; Calculate delta phi itself
-  SFTS AC0, #15
-  ADD #1, T1
   MPY #DELTA_PHI_CONST, AC0
   SFTS AC0, #1
   MPY #HOP_SIZE, AC0
   SFTS AC0, #1
-  NEG AC0
-  MOV *AR1, AC1
-  SFTS AC1, #10
-  ADD AC1, AC0
-  MOV *AR2, AC1
-  SFTS AC1, #10
-  SUB AC1, AC0
+  NEG AC0								  ; After this negation the result is -hop_size*delta_phi_const*i
 
-  										   ; Ensure -pi < delta phi < pi
-  MOV #PI_Q4_11, AC1
-  SFTS AC1, #5
-  ADD AC1, AC0
-  _mod_2pi								   ; ((delta phi + pi) mod 2pi) - pi
-  MOV #PI_Q4_11, AC1
-  SFTS AC1, #5
-  SUB AC1, AC0
-  SFTS AC0, #10
-  MOV AC0, *AR0+
-ps_loop3_end: MOV *AR1+, *AR2+
+  										  ; Now add and subtract to/from AC0 as if it's a Q15.16
+  MOV *AR1, AC1
+  SFTS AC1, #5							  ; Phase frame is stored as Q4.11
+  ADD AC1, AC0							  ; Add the new phase
+  MOV *AR2, AC1
+  SFTS AC1, #5							  ; Old phase frame is also stored as Q4.11
+  SUB AC1, AC0							  ; Subtract the old phase
+
+  										  ; Ensure -pi < delta phi < pi
+  ADD #PI_Q4_11<<#5, AC0
+  _mod_2pi				  				  ; ((delta phi + pi) mod 2pi) - pi, AC0 = Q15.16
+  SUB #PI_Q4_11<<#5, AC0
+  SFTS AC0, #5							  ; Turn Q15.16 into Q4.11
+  MOV AC0, *AR0+						  ; Add calculated delta phi to delta phi vector
+ps_loop3_end: MOV *AR1+, *AR2+			  ; Update phase frame, old phase = new phase
+
 										; Calculate the true frequency
   MOV #1023, BRC0						; Loop 1024 times
   SUB 1024, AR0                         ; Go back to beginning of delta phi vector
   MOV #TRUE_FREQ_START, AR1				; Get pointer to true frequency
-  MOV #0, T1	                        ; Go back to beginning of the index
+  MOV #0, T0	                        ; Go back to beginning of the index
   
   RPTBLOCAL ps_loop4_end
-  MOV #DELTA_PHI_CONST, AC0
-  SFTS AC0, #16
-  MPY #INV_HOP_SIZE_Q15, AC0
+  										; AC0 = delta_phi_const * i
+  MOV T0<<#16, AC0
+  MOV T0<<#16, AC1
+  MPY #DELTA_PHI_CONST, AC0
   SFTS AC0, #1
-  MOV *AR0+, AC1
-  MPY #INV_HOP_SIZE_Q15, AC1
+  MPY #DELTA_PHI_CONST, AC1
+  SFTS AC0, #1
   ADD AC1, AC0
+										; AC1 = delta_phi[i] * inverse HOP_SIZE
+  MOV *AR0+<<#16, AC1
+  MPY #INV_HOP_SIZE_Q15, AC1
+
+  ADD AC1, AC0							; AC0 = true_freq as Q15.16
+
+  SFTS AC0, #5							; Turn true_freq into Q4.11
 ps_loop4_end: MOV AC1, *AR1+
 
                                         ; Calculate the cumulative phase
