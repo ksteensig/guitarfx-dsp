@@ -18,7 +18,6 @@ MAGNITUDE_FRAME_START   .set 0x0000 ; TBD but it shall be 1024 big
 PHASE_FRAME_START       .set 0x0000 ; TBD but it shall be 1024 big
 PREV_PHASE_FRAME_START  .set 0x0000 ; TBD but it shall be 1024 big
 DELTA_PHI_START         .set 0x0000 ; TBD but it shall be 1024 big
-BIT_REV_INDEX_START     .set 0x0000 ; TBD but it shall be 1024 big
 TRUE_FREQ_START         .set 0x0000 ; TBD but it shall be 1024 big
 CUMMULATIVE_PHASE_START .set 0x0000 ; TBD but it shall be 1024 big
 
@@ -43,24 +42,26 @@ _sqrt_16:
 _atan16:
   RET
 
-** T0 = input (Q15)
-** T1 = output (Q4.11)
-_mod_2pi: .macro						; T1 = (T0 - 2*pi) * floor(T0 * 1/(2*pi))
-										; Calculate T0 - 2*pi
-	MOV T0, AC0
-	SUB TWO_PI_Q4_11, AC0
-	SFTS AC1, #16
-										; Calculate floor(T0 * 1/(2*pi))
-	MOV T0, AC1
-	SFTS AC1, #16
-	MPY #INV_TWO_PI_Q15, AC1
-	SFTS AC1, #1
-	AND 0xF8000000, AC1					; Zero out all fractions, which is flooring
+_cbrev32:
+  RET
 
-										; Calculate (T0 - 2*pi) * floor(T0 * 1/(2*pi))
-	MPY AC0, AC1
-	SFTS AC0, #-14
-	MOV AC1, T1							; Put result in T1
+** AC0 = input (Q15.15)
+** AC0 = output (Q9.6)					; Modulus has not been finished
+_mod_2pi: .macro						; AC0 = AC0 - 2*pi * floor(AC0 * 1/(2*pi))
+										; Calculate floor(AC0 * 1/(2*pi))
+	MOV AC0, AC1
+	MOV AC0, AC2
+	AND 0xFFFF8000, AC0					; Zero out lower word
+	AND 0x00007FFF, AC1					; Zero out higher word
+	SFTS AC1, #16
+	MPY #INV_TWO_PI_Q15, AC0
+	MPY #INV_TWO_PI_Q15, AC1
+	ADD AC1, AC0						; Add results together
+	SFTS AC1, #1
+	AND 0xFFFF8000, AC0					; Zero out all fractions, which is flooring
+	MPY TWO_PI_Q4_11, AC0
+	SFTS AC0, #-2
+	SUB AC0, AC2
   	.endm
 
 _time_stretch:
@@ -73,7 +74,7 @@ _time_stretch:
 										; Window the sample
   SFTS AC0, #16
   MPY AC1, AC0
-  SFTS #1, AC0
+  SFTS AC0, #1
   MPY #WINDOW_SCALE_FACTOR, AC0
   SFTS AC0, #-15
 
@@ -84,6 +85,7 @@ ps_loop1_end: ADD #1, AR4				; Every other sample in the FFT buffer is imaginary
   SUB #2048, AR4						; Go back to beginning of the FFT buffer
   MOV #1024, T0							; Use 1024-point FFT
   CALL _cfft_SCALE                      ; Best performance with twiddle in ROM and FFT_BUF in DARAM
+  CALL _cbrev32							; bit reverse, there is enough computation for this
 
                                         ; Calculate magnitude frame, which is the abs() of each value in the FFT buffer
   MOV #MAGNITUDE_FRAME_START, AR0		; Create pointer to magnitude frame
@@ -121,33 +123,48 @@ ps_loop2_end: MOV *AR4+, *AR1+			; Copy imaginary sample into imaginary buffer
   MOV #DELTA_PHI_START, AR0				; Make pointer to delta phi buffer
   MOV #PHASE_FRAME_START, AR1			; Make pointer to phase frame buffer
   MOV #PREV_PHASE_FRAME_START, AR2		; Make pointer to last iteration's phase frame buffer
-  MOV #BIT_REV_INDEX_START, AR3			; Make pointer to a list of bit reversed index values
+  MOV #0, T1							; Start index counter
 
   RPTBLOCAL ps_loop3_end
   										  ; SFTS the following block at some point
-  MOV *AR3, AC0
-  MPY #HOP_SIZE, AC0
+  MOV T1, AC0							  ; AC0 = i
+  										  ; Calculate delta phi itself
+  SFTS AC0, #15
+  ADD #1, T1
   MPY #DELTA_PHI_CONST, AC0
-  MPY *AR3+, AC0
+  SFTS AC0, #1
+  MPY #HOP_SIZE, AC0
+  SFTS AC0, #1
   NEG AC0
-  ADD *AR1, AC0
-  SUB *AR2, AC0
-  ADD #PI_Q4_11, AC0
-  _mod_2pi
-  SUB #PI_Q4_11, AC0
-  MOV *AR1+, *AR2+
-  MOV AC0, T0
-ps_loop3_end: MOV T1, *AR0+
+  MOV *AR1, AC1
+  SFTS AC1, #10
+  ADD AC1, AC0
+  MOV *AR2, AC1
+  SFTS AC1, #10
+  SUB AC1, AC0
 
+  										   ; Ensure -pi < delta phi < pi
+  MOV #PI_Q4_11, AC1
+  SFTS AC1, #5
+  ADD AC1, AC0
+  _mod_2pi								   ; ((delta phi + pi) mod 2pi) - pi
+  MOV #PI_Q4_11, AC1
+  SFTS AC1, #5
+  SUB AC1, AC0
+  SFTS AC0, #10
+  MOV AC0, *AR0+
+ps_loop3_end: MOV *AR1+, *AR2+
+										; Calculate the true frequency
   MOV #1023, BRC0						; Loop 1024 times
   SUB 1024, AR0                         ; Go back to beginning of delta phi vector
   MOV #TRUE_FREQ_START, AR1				; Get pointer to true frequency
-  SUB #1024, AR3                        ; Go back to beginning of bit reversed index vector
+  MOV #0, T1	                        ; Go back to beginning of the index
   
   RPTBLOCAL ps_loop4_end
   MOV #DELTA_PHI_CONST, AC0
-  STFS AC0, #16
-  MPY *AR3+, AC0
+  SFTS AC0, #16
+  MPY #INV_HOP_SIZE_Q15, AC0
+  SFTS AC0, #1
   MOV *AR0+, AC1
   MPY #INV_HOP_SIZE_Q15, AC1
   ADD AC1, AC0
