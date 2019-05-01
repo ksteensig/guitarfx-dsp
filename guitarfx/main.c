@@ -1,4 +1,4 @@
-#include "com_interface.h" // Used for communicating with Arduino
+//#include "com_interface.h" // Used for communicating with Arduino
 #include <stdio.h>
 #include <usbstk5505.h>
 #include <aic3204.h>
@@ -36,6 +36,7 @@ extern void ring_buffer();
  * ------------------------------------------------------------------------ */
 void main( void )
 {
+    printf("Entering Main\n");
     /* Initialize BSL */
     USBSTK5505_init( );
 
@@ -50,43 +51,22 @@ void main( void )
     /* Initialise the AIC3204 codec */
     aic3204_init();
 
-    printf("\n\nRunning Improved Audio Template Project\n");
-    printf( "<-> Audio Loopback from Stereo IN --> to HP/Lineout\n\n" );
-
     /* Setup sampling frequency and 30dB gain for microphone */
     set_sampling_frequency_and_gain(SAMPLES_PER_SECOND, GAIN_IN_dB);
 
-    /* New. Add descriptive text */
-    puts("\nChanges configuration once every 20 seconds and flashes LED");
-    puts(" 1 Flash   = Straight through, no signal processing");
-    puts(" 2 Flashes = Convert stereo to mono");
-    puts(" 3 Flashes = Left input -> right output. Right input -> left output");
+    printf("AIC3204 is initialized and configured\n");
 
-    /* New. Default to XF LED off */
-
-    //CSL_DMA_Config dmaConfig;
-/*
-    dmaConfig.pingPongMode  = CSL_DMA_PING_PONG_ENABLE;
-    dmaConfig.autoMode      = CSL_DMA_AUTORELOAD_ENABLE;
-    dmaConfig.burstLen      = CSL_DMA_TXBURST_4WORD;
-    dmaConfig.trigger       = CSL_DMA_EVENT_TRIGGER;
-    dmaConfig.dmaInt        = CSL_DMA_INTERRUPT_DISABLE;
-    dmaConfig.dataLen       = 8;
-    dmaConfig.trfType       = CSL_DMA_TRANSFER_IO_MEMORY;
-
-
-    dmaConfig.chanDir       = CSL_DMA_READ;
-    dmaConfig.dmaEvt        = CSL_DMA_EVT_I2S2_RX;              // Microphone on I2S1 (CSL_DMA_EVT_I2S0_RX)
-    dmaConfig.srcAddr       = (Uint32)(I2S2_W0_LSW_R);// I2S0 Receive left Data 0 Register
-    dmaConfig.destAddr      = (Uint32)(I2S2_W0_LSW_W);
-
-
+  /*  // Communication setup
     CSL_Status status;
-    CSL_DMA_Handle = DMA_open(CSL_DMA_CHAN1, &dmaCodecUL_Obj, &status);
-    DMA_config(hDMA_CodecUL, &dmaConfig);
-  */
+    //puts("Status declared\nEntering COMS_SetupI2C\n");
+    status = COMS_SetupI2C();
+    if(status != CSL_SOK){printf("I2C was not set up correctly!");}
+    //puts("I2C was set up correctly!");
+    status = COMS_SetupDMA();
+    if(status != CSL_SOK){printf("DMA was not set up correctly!");}
 
-    //__asm(" AMOV #020000h, XAR6 ");
+    status = COMS_Enable();
+*/
 
     ring_buffer();
 
@@ -97,5 +77,5 @@ void main( void )
     IRQ_enable(15);
     IRQ_globalEnable();
 
-    while (1);
+    while (1){}
 }

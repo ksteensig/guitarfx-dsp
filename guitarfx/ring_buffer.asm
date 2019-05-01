@@ -38,9 +38,9 @@ _ring_buffer:
 ; y[n] = x[n] + G * y[n-d]
 echo_effect:
 	MOV *AR6(-D), AC0				; move y[n-d] into accumulator
-	SFTS AC0, #16					; Shift the
+	SFTS AC0, #16					; Shift the delay input left in the AC0. Could probably be replaced by HI(AC0) as Casper mentioned.
 	MPYK #DG, AC0					; multiply G and y[n-d]
-	SFTS AC0, #-15					; Does this work?
+	SFTS AC0, #-15					; Shift the output down so we can get it out. 15 = 16 right (to mov hi to low part) - 1 to remove extra sign bit.
 	ADD AR0, AC0					; add x[n] to get y[n]
 	MOV.CR AC0, *AR6+				; move y[n] into ringbuffer
 	MOV AC0, AR0					; move y[n] into AR0
