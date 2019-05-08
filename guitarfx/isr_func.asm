@@ -46,7 +46,7 @@ _isr_func:
 	OR #0000100000000000b, mmap(ST1)		; DISABLE INTERRUPTS GLOBALLY!
 	AMOV #xn, XCDP							; Needed for next operation
 	MOV port(#ADCR), *CDP					; Moves input sample to AC3
-	echo_effect
+	CALL echo_effect
 	MOV.CR *CDP, *AR6-						; Move x[n] into y[n] ringbuffer
 	MOV *CDP, port(#DACR)
 	AND #1111011111111111b, mmap(ST1)		; ENABLE INTERRUPTS GLOBALLY!

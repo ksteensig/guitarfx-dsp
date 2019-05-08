@@ -13,7 +13,7 @@ DG				.set	0010000000000000b ; in Q14 this is 0.5
 *********************************************************************
 
 	.text
-echo_effect: .macro
+echo_effect:
 *Setup for echo_effect
 	AMOV #xn, XAR0
 *Calculate Echo effect: y[n] = x[n] + DG * y[n-d]
@@ -23,4 +23,4 @@ echo_effect: .macro
 	SFTS AC0, #-15					; Shift the output down so we can get it out. 15 = 16 right (to mov hi to low part) - 1 to remove extra sign bit.
 	ADD *AR0, AC0					; add x[n] to get y[n]
 	MOV AC0, *AR0					; move y[n] into x[n] = AR0 for next effect to use
-	.endm
+	RET
