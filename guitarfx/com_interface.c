@@ -15,6 +15,9 @@ CSL_DMA_Config        dmaConfig;
 CSL_DMAChanNum        dmaChanNum;
 CSL_DMA_ChannelObj    dmaChanObj;
 
+unsigned long DMA_CONFIG_TEMP_ADDRESS = 0;
+unsigned long CONFIG_ADDRESS = 0;
+
 CSL_Status COMS_SetupI2C( void ){
 
     puts("COMS_SetupI2C\n");
@@ -44,6 +47,10 @@ CSL_Status COMS_SetupI2C( void ){
 }
 
 CSL_Status COMS_SetupDMA( void ){
+    DMA_CONFIG_TEMP_ADDRESS = get_config_dma_address(); // Return BYTE address (no offset yet)
+    //DMA_CONFIG_TEMP_ADDRESS = DMA_CONFIG_TEMP_ADDRESS + 0x10000; // Add DARAM offset to byte address.
+    CONFIG_ADDRESS = DMA_CONFIG_TEMP_ADDRESS + (COMS_CONFIGSIZE * 2);
+
     dmaChanNum = CSL_DMA_CHAN8; //DMA2CH0 - not confirmed yet
     CSL_Status status;
 
@@ -67,20 +74,25 @@ CSL_Status COMS_SetupDMA( void ){
     dmaConfig.trigger      = CSL_DMA_EVENT_TRIGGER;
     // Event to trigger on is "I2C Receive Ready"
     dmaConfig.dmaEvt       = CSL_DMA_EVT_I2C_RX;
-    // We should NOT interrupt the CPU
-    dmaConfig.dmaInt       = CSL_DMA_INTERRUPT_DISABLE;
+    // We should interrupt the CPU
+    dmaConfig.dmaInt       = CSL_DMA_INTERRUPT_ENABLE;
     // We are reading from a device
     dmaConfig.chanDir      = CSL_DMA_READ;
     // We are transfering from IO to Memory
     dmaConfig.trfType      = CSL_DMA_TRANSFER_IO_MEMORY;
     // Number of doublewords to transfer for each run of the DMA (not per event) * 4 to get in bytes.
-    dmaConfig.dataLen      = 4*4;
-    dmaConfig.srcAddr      = (Uint32)&(i2cHandle->i2cRegs->ICMDR);
-    dmaConfig.destAddr     = (Uint32)0x30000;
+    dmaConfig.dataLen      = COMS_CONFIGSIZE*4;
+    dmaConfig.srcAddr      = (Uint32)&(i2cHandle->i2cRegs->ICDRR);
+    dmaConfig.destAddr     = (Uint32)DMA_CONFIG_TEMP_ADDRESS;
 
     // CONFIGURE DMA HANDLER
     status = DMA_config(dmaHandle, &dmaConfig);
     if(status != CSL_SOK){puts("DMA Config Failed\n"); return status;}
+
+    // Enable DMA2CH0 in DMAInterruptEnableRegister
+    asm(" OR #0000000100000000b, *(#1C31h) ");
+
+    // Return status if we got this far, everything should be OK.
     return CSL_SOK;
 }
 
@@ -97,5 +109,7 @@ CSL_Status COMS_Disable( void ){
     if(status != CSL_SOK){puts("DMA Stop/Disable Failed\n"); return status;}
     return CSL_SOK;
 }
+
+
 
 // END OF FILE

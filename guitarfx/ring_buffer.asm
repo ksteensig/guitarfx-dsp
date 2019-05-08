@@ -50,7 +50,9 @@ flanger_effect:
 	RET
 
 _isr_func:
+	OR #0000100000000000b, mmap(ST1)		; DISABLE INTERRUPTS GLOBALLY!
 	MOV port(#ADCR), AR0
 	CALL echo_effect
 	MOV AR0, port(#DACR)
+	AND #1111011111111111b, mmap(ST1)		; ENABLE INTERRUPTS GLOBALLY!
 	RETI

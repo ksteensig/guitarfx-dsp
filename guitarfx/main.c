@@ -1,4 +1,4 @@
-//#include "com_interface.h" // Used for communicating with Arduino
+#include "com_interface.h" // Used for communicating with Arduino
 #include <stdio.h>
 #include <usbstk5505.h>
 #include <aic3204.h>
@@ -40,11 +40,6 @@ void main( void )
     /* Initialize BSL */
     USBSTK5505_init( );
 
-    /* Initialize PLL */
-    //pll_frequency_setup(100);
-
-    //PLL_Obj pllObj;
-
     /* Initialise hardware interface and I2C for code */
     aic3204_hardware_init();
 
@@ -56,7 +51,7 @@ void main( void )
 
     printf("AIC3204 is initialized and configured\n");
 
-  /*  // Communication setup
+    // Communication setup
     CSL_Status status;
     //puts("Status declared\nEntering COMS_SetupI2C\n");
     status = COMS_SetupI2C();
@@ -66,7 +61,7 @@ void main( void )
     if(status != CSL_SOK){printf("DMA was not set up correctly!");}
 
     status = COMS_Enable();
-*/
+    if(status != CSL_SOK){printf("DMA was not enabled!");}
 
     ring_buffer();
 
@@ -75,6 +70,8 @@ void main( void )
     IRQ_setVecs(((Uint32)&vec) << 1);
     IRQ_plug(15, &isr_func);
     IRQ_enable(15);
+    IRQ_plug(8, &coms_isr);
+    IRQ_enable(8);
     IRQ_globalEnable();
 
     while (1){}

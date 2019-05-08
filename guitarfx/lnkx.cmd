@@ -41,9 +41,6 @@ MEMORY
 
   IOPORT (RWI) : origin = 0x000000, length = 0x020000
 
- PAGE 3:
-  COM_CONFIG_TEMP (RWIX): origin = 0x030000, length = 0x000800 /* 1KB - Arduino Com Interface */
-  COM_CONFIG	  (RWIX): origin = 0x030800, length = 0x000800 /* 1KB - Actual Config with all parameters from Arduino */
 }
  
 /* SPECIFY THE SECTIONS ALLOCATION INTO MEMORY */
@@ -70,5 +67,6 @@ SECTIONS
 
    .ioport   >  IOPORT PAGE 2         /* Global & static ioport vars */
 
-   BUFFER 	 >  SARAM1
+   COM_CONFIG_DMA_SEC 	>  DARAM0
+   BUFFER 	 			>  SARAM1
 }

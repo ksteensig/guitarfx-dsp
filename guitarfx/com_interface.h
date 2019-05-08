@@ -16,6 +16,10 @@
 #define COMS_I2C_OWN_ADDR         (0x43)
 #define COMS_I2C_SYS_CLK          (100)
 #define COMS_I2C_BUS_FREQ         (10)
+#define COMS_CONFIGSIZE           (256) // Make sure this matches the size on the arduino.
+
+extern unsigned long get_config_dma_address();
+extern interrupt void coms_isr();
 
 extern pI2cHandle     i2cHandle;
 
