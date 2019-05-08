@@ -64,7 +64,7 @@ SECTIONS
    .args     >  SARAM2                /* Arguments to main()         */
 
     vectors  >  VECS                  /* Interrupt vectors           */
-
+   .temp	 >  SARAM2
    .ioport   >  IOPORT PAGE 2         /* Global & static ioport vars */
 
    COM_CONFIG_DMA_SEC 	>  DARAM0
