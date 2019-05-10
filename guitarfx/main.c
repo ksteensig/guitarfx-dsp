@@ -28,7 +28,8 @@ unsigned int Step = 1;
 
 extern interrupt void isr_func();
 extern void ring_buffer();
-
+extern void oscillator_reset32();
+extern void flanger_chorus_reset();
 /* ------------------------------------------------------------------------ *
  *                                                                          *
  *  main( )                                                                 *
@@ -36,7 +37,15 @@ extern void ring_buffer();
  * ------------------------------------------------------------------------ */
 void main( void )
 {
+    IRQ_globalDisable();
+
+    /* Initialize all effect registers */
+    oscillator_reset32();
+    flanger_chorus_reset();
+    ring_buffer();
+
     printf("Entering Main\n");
+
     /* Initialize BSL */
     USBSTK5505_init( );
 
@@ -63,16 +72,15 @@ void main( void )
     status = COMS_Enable();
     if(status != CSL_SOK){printf("DMA was not enabled!");}
 
-    ring_buffer();
 
     Uint32 vec;
-
     IRQ_setVecs(((Uint32)&vec) << 1);
     IRQ_plug(15, &isr_func);
     IRQ_enable(15);
     IRQ_plug(8, &coms_isr);
     IRQ_enable(8);
     IRQ_globalEnable();
+
 
     while (1){}
 }

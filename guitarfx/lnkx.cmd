@@ -62,11 +62,11 @@ SECTIONS
    .pinit    >  SARAM2                /* Initialization fn tables    */
    .cio      >  SARAM2                /* C I/O buffers               */
    .args     >  SARAM2                /* Arguments to main()         */
-
+   .vars	 >  SARAM1
     vectors  >  VECS                  /* Interrupt vectors           */
    .temp	 >  SARAM2
    .ioport   >  IOPORT PAGE 2         /* Global & static ioport vars */
 
    COM_CONFIG_DMA_SEC 	>  DARAM0
-   BUFFER 	 			>  SARAM1
+   .BUFFER 	 			>  SARAM1
 }
