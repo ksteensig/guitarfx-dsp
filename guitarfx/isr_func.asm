@@ -1,8 +1,8 @@
 *********************************************************************
 *Section for: .set, .ref and .def									*
 *********************************************************************
-ADCR			.set	002A2Dh			  ; Right channel ADC
-DACR			.set	002A09h			  ; Right channel DAC
+ADCR			.set	002A29h			  ; Left channel ADC
+DACR			.set	002A09h			  ; Left channel DAC
 ECHOBUFFSIZE	.set	0x8000
 
 	.ref echo_effect, _flanger_effect, _chorus_effect
