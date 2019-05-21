@@ -1,7 +1,7 @@
 		.sect  ".ivars"
  			.align 2
-dl:			.word 0x7FFF
-G:			.word 0x3000		;Signed Q15
+dl:			.word 0x040B
+G:			.word 0x2000		;Signed Q15
 D:			.word 0x7FFF		;Signed Q15
 	.def echo_effect
 	.ref xn

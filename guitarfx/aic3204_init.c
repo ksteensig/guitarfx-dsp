@@ -257,7 +257,7 @@ unsigned long set_sampling_frequency_and_gain(unsigned long SamplingFrequency, u
     AIC3204_rset( 65, 0 );     // Left DAC gain to 0dB VOL; Right tracks Left
     AIC3204_rset( 63, 0x90 );  // Power up left,right data paths and set channel
     AIC3204_rset( 0, 1 );      // Select page 1
-    AIC3204_rset( 0x10, 0 );  // Unmute HPL , 10dB gain
+    AIC3204_rset( 0x10, 10 );  // Unmute HPL , 10dB gain
     AIC3204_rset( 0x11, 0 );  // Unmute HPR , 10dB gain
     AIC3204_rset( 9, 0x20 );   // Power up HPL,HPR
     AIC3204_rset( 0, 0 );      // Select page 0

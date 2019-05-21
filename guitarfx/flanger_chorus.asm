@@ -64,24 +64,27 @@ F: 		.word 	0x2333
 		.word 	0x0000
 
  		.align 2
-bd:	 	.word	0x0FFF 		; Base delay is signed: Q16,0
+bd:	 	.word	0x01FF 		; Base delay is signed: Q16,0
 		.word 	0x0000 		; It is necessary to have long word alignment for delay calculate to work, therefore zero padding is used.
-		.word 	0x0FFF
+		.word 	0x02FF
 		.word 	0x0000
-		.word 	0x0FFF
+		.word 	0x03FF
 		.word 	0x0000
-		.word 	0x0FFF
+		.word 	0x04FF
 		.word 	0x0000
-		.word 	0x7FFF
+		.word 	0x05FF
+		.word 	0x0000
 
 		.align 2
-amp:	.word 	0x0FFF		; Amplitude is unsigned: Q15,1
+amp:	.word 	0x0080		; Amplitude is unsigned: Q15,1
 		.word 	0x0000 		; It is necessary to have long word alignment for delay calculate to work, therefore zero padding is used.
-		.word 	0x0FFF
+		.word 	0x0080
 		.word 	0x0000
-		.word 	0x0FFF
+		.word 	0x0080
 		.word 	0x0000
-		.word 	0x0FFF
+		.word 	0x0080
+		.word 	0x0000
+		.word 	0x0080
 		.word 	0x0000
 
 G:     					.usect ".vars", 1       	;Forward Gain: Q15
