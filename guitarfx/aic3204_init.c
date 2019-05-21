@@ -255,11 +255,11 @@ unsigned long set_sampling_frequency_and_gain(unsigned long SamplingFrequency, u
     AIC3204_rset( 0, 0 );      // Select page 0
     AIC3204_rset( 64, 2 );     // Left vol=right vol
     AIC3204_rset( 65, 0 );     // Left DAC gain to 0dB VOL; Right tracks Left
-    AIC3204_rset( 63, 0xd4 );  // Power up left,right data paths and set channel
+    AIC3204_rset( 63, 0x90 );  // Power up left,right data paths and set channel
     AIC3204_rset( 0, 1 );      // Select page 1
-    AIC3204_rset( 0x10, 10 );  // Unmute HPL , 10dB gain
-    AIC3204_rset( 0x11, 10 );  // Unmute HPR , 10dB gain
-    AIC3204_rset( 9, 0x30 );   // Power up HPL,HPR
+    AIC3204_rset( 0x10, 0 );  // Unmute HPL , 10dB gain
+    AIC3204_rset( 0x11, 0 );  // Unmute HPR , 10dB gain
+    AIC3204_rset( 9, 0x20 );   // Power up HPL,HPR
     AIC3204_rset( 0, 0 );      // Select page 0
     USBSTK5505_wait( 100 );    // wait
     /* ADC ROUTING and Power Up */
@@ -273,16 +273,16 @@ unsigned long set_sampling_frequency_and_gain(unsigned long SamplingFrequency, u
     AIC3204_rset( 0x3b, gain );   // MIC_PGA_L unmute
     AIC3204_rset( 0x3c, gain );   // MIC_PGA_R unmute
     AIC3204_rset( 0, 0 );      // Select page 0
-    AIC3204_rset( 0x51, 0xc0 );// Powerup Left and Right ADC
-    AIC3204_rset( 0x52, 0 );   // Unmute Left and Right ADC
+    AIC3204_rset( 0x51, 0x80 );// Powerup Left and Right ADC
+    AIC3204_rset( 0x52, 0x08 );   // Unmute Left and Right ADC
     
     AIC3204_rset( 0, 0 );    
     USBSTK5505_wait( 100 );  // Wait
     
     /* I2S settings */
     I2S2_SRGR = 0x0;     
-    I2S2_CR = 0x8010;    // 16-bit word, slave, enable I2C
-    I2S2_ICMR = 0x3f;    // Enable interrupts
+    I2S2_CR = 0x9010;    // 16-bit word, slave, enable I2C
+    I2S2_ICMR = 0x14;    // Enable interrupts
 	
  	return(output);
 }

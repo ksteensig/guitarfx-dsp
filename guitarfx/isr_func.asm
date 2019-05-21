@@ -1,8 +1,8 @@
 *********************************************************************
 *Section for: .set, .ref and .def									*
 *********************************************************************
-ADCR			.set	002A2Dh			  ; Input sample (x(n))
-DACR			.set	002A0Dh			  ; Output sample (y(n))
+ADCR			.set	002A2Dh			  ; Right channel ADC
+DACR			.set	002A09h			  ; Right channel DAC
 ECHOBUFFSIZE	.set	0x8000
 
 	.ref echo_effect, _flanger_effect, _chorus_effect
@@ -42,7 +42,7 @@ xn:		.word 0x0000
 
 	.text
 
-_isr_func:
+_isr_func_FIR:
 	OR #0000100000000000b, mmap(ST1)		; DISABLE INTERRUPTS GLOBALLY!
 	AMOV #xn, XCDP							; Needed for next operation
 	MOV port(#ADCR), *CDP					; Moves input sample to AC3
@@ -52,7 +52,7 @@ _isr_func:
 	AND #1111011111111111b, mmap(ST1)		; ENABLE INTERRUPTS GLOBALLY!
 	RETI
 
-_isr_func_IIR:
+_isr_func:
 	OR #0000100000000000b, mmap(ST1)		; DISABLE INTERRUPTS GLOBALLY!
 	AMOV #xn, XCDP							; Needed for next operation
 	MOV port(#ADCR), *CDP					; Moves input sample to AC3
@@ -61,6 +61,15 @@ _isr_func_IIR:
 	;CALL _chorus_effect
 	AMAR *AR6-
 	MOV *CDP, port(#DACR)
+	AND #1111011111111111b, mmap(ST1)		; ENABLE INTERRUPTS GLOBALLY!
+	RETI
+
+_isr_func_DEBUG:
+	OR #0000100000000000b, mmap(ST1)		; DISABLE INTERRUPTS GLOBALLY!
+	;NEG T0
+	AMAR *AR6-
+	MOV AR6, port(#DACR)
+	;MOV *CDP, port(#DACR)
 	AND #1111011111111111b, mmap(ST1)		; ENABLE INTERRUPTS GLOBALLY!
 	RETI
 
