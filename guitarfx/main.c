@@ -36,7 +36,7 @@ extern void flanger_chorus_reset();
  *                                                                          *
  * ------------------------------------------------------------------------ */
 void main( void )
-{
+ {
     IRQ_globalDisable();
 
     /* Initialize all effect registers */

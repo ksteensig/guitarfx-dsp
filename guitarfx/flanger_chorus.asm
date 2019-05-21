@@ -2,31 +2,31 @@
 ;b0     .set 0x03e8    ; signed Q16,0
 ;a0     .set 0x07d0    ; unsigned Q15,1
 ;resetZero   	.set 0x0000
-direct_path   	.set 0x4000
-feedback_path  	.set 0x0CCC
+direct_path   	.set 0x6666
+feedback_path  	.set 0x9000
 ADCR    		.set 0x002A2D
-voices    		.set    0x0002
+voices    		.set 0x0002
 
 		.sect  ".ivars"      ;Feedback Gain: Q15
  		.align 2
-K1:		.word 0x0001      ;HI(K1) for voice 0
- 		.word 0x1284      ;LO(K1) for voice 0      0x00001B73 = (0,05) 0,1 Hz
-		.word 0x0001      ;-- Voice 1
-		.word 0x1284      ;-- Voice 1     0x000036E7 = (0,1) 0,2 Hz
-		.word 0x0001      ;-- Voice 2
-		.word 0x1284      ;-- Voice 2     0x00006DCE = (0,2) 0,4 Hz
+K1:		.word 0x0000      ;HI(K1) for voice 0
+ 		.word 0x1B73      ;LO(K1) for voice 0      0x00001B73 = (0,05) 0,1 Hz
+		.word 0x0000      ;-- Voice 1
+		.word 0x1B73      ;-- Voice 1     0x000036E7 = (0,1) 0,2 Hz
+		.word 0x0000      ;-- Voice 2
+		.word 0x1B73      ;-- Voice 2     0x00006DCE = (0,2) 0,4 Hz
 		.word 0x0000      ;-- Voice 3
 		.word 0xA4B6      ;-- Voice 3      0x00011284 = (0,5) 1 Hz
 		.word 0x0000      ;-- Voice 4
 		.word 0xA4B6      ;-- Voice 4
 
 		.align 2
-K2: 	.word 0x0002      ;HI(K2) for voice 0
-		.word 0x2508      ;LO(K2) for voice 0   0x000036E7 = (0,05) 0,1 Hz
-		.word 0x0002      ;-- Voice 1
-		.word 0x2508      ;-- Voice 1     0x00006DCE = (0,1) 0,2 Hz
-		.word 0x0002      ;-- Voice 2
-		.word 0x2508      ;-- Voice 2     0x0000DB9D = (0,2) 0,4 Hz
+K2: 	.word 0x0000      ;HI(K2) for voice 0
+		.word 0x36E7      ;LO(K2) for voice 0   0x000036E7 = (0,05) 0,1 Hz
+		.word 0x0000      ;-- Voice 1
+		.word 0x36E7      ;-- Voice 1     0x00006DCE = (0,1) 0,2 Hz
+		.word 0x0000      ;-- Voice 2
+		.word 0x36E7      ;-- Voice 2     0x0000DB9D = (0,2) 0,4 Hz
 		.word 0x0001      ;-- Voice 3
 		.word 0x496B      ;-- Voice 3     0x00022508 = (0,5) 1 Hz
 		.word 0x0001      ;-- Voice 4
@@ -57,31 +57,31 @@ vn: 	.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
 		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
 
  		.align 2
-F: 		.word 	0x3333
-		.word 	0x3333
-		.word 	0x3333
-		.word 	0x000A
-		.word 	0x0CCC
+F: 		.word 	0x2333
+		.word 	0x2333
+		.word 	0x2333
+		.word 	0x0000
+		.word 	0x0000
 
  		.align 2
-bd:	 	.word	0x00FF 		; Base delay is signed: Q16,0
+bd:	 	.word	0x0FFF 		; Base delay is signed: Q16,0
 		.word 	0x0000 		; It is necessary to have long word alignment for delay calculate to work, therefore zero padding is used.
-		.word 	0x00E7
+		.word 	0x0FFF
 		.word 	0x0000
-		.word 	0x0AB9
+		.word 	0x0FFF
 		.word 	0x0000
-		.word 	0x00FF
+		.word 	0x0FFF
 		.word 	0x0000
 		.word 	0x7FFF
 
 		.align 2
-amp:	.word 	0x00FF		; Amplitude is unsigned: Q15,1
+amp:	.word 	0x0FFF		; Amplitude is unsigned: Q15,1
 		.word 	0x0000 		; It is necessary to have long word alignment for delay calculate to work, therefore zero padding is used.
-		.word 	0x00E7
+		.word 	0x0FFF
 		.word 	0x0000
-		.word 	0x0AB9
+		.word 	0x0FFF
 		.word 	0x0000
-		.word 	0x00FF
+		.word 	0x0FFF
 		.word 	0x0000
 
 G:     					.usect ".vars", 1       	;Forward Gain: Q15
@@ -189,10 +189,12 @@ _chorus_effect:
 	ADD *AR6(T0) << #16, AC0       					;AC0 = a*LO(delayOutput)+y[n-FLOOR(M(n))]
 	MOV BRC0, T0
 	MPYM *AR4(T0), AC0         						;Multiply with feedback gain for each voice
-END ADD AC0 << #1, AC3         					;Sum output of all voices
+END ADD AC0 << #1, AC3         						;Sum output of all voices
+
 	AMOV #xn, XAR1
+	MOV *(#G), T1
 	ADD *AR1 << #16, AC3
-	MPYM *(#G), AC3
+	MACM *AR1, T1, AC3
 	SFTS AC3, #1
 	ADD *(#noise_shaping), AC3       				;ADD noise shaping
 	MOV HI(AC3), *AR1
