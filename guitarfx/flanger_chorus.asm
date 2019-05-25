@@ -2,10 +2,10 @@
 ;b0     .set 0x03e8    ; signed Q16,0
 ;a0     .set 0x07d0    ; unsigned Q15,1
 ;resetZero   	.set 0x0000
-direct_path   	.set 0x6666
+direct_path   	.set 0x7FFF
 feedback_path  	.set 0x9000
 ADCR    		.set 0x002A2D
-voices    		.set 0x0002
+voices    		.set 0x0005
 
 		.sect  ".ivars"      ;Feedback Gain: Q15
  		.align 2
@@ -57,14 +57,14 @@ vn: 	.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
 		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
 
  		.align 2
-F: 		.word 	0x2333
-		.word 	0x2333
-		.word 	0x2333
+F: 		.word 	0x7FFF
+		.word 	0x0000
+		.word 	0x0000
 		.word 	0x0000
 		.word 	0x0000
 
  		.align 2
-bd:	 	.word	0x01FF 		; Base delay is signed: Q16,0
+bd:	 	.word	0x0000 		; Base delay is signed: Q16,0
 		.word 	0x0000 		; It is necessary to have long word alignment for delay calculate to work, therefore zero padding is used.
 		.word 	0x02FF
 		.word 	0x0000
@@ -76,15 +76,15 @@ bd:	 	.word	0x01FF 		; Base delay is signed: Q16,0
 		.word 	0x0000
 
 		.align 2
-amp:	.word 	0x0080		; Amplitude is unsigned: Q15,1
+amp:	.word 	0x0000		; Amplitude is unsigned: Q15,1
 		.word 	0x0000 		; It is necessary to have long word alignment for delay calculate to work, therefore zero padding is used.
-		.word 	0x0080
 		.word 	0x0000
-		.word 	0x0080
 		.word 	0x0000
-		.word 	0x0080
 		.word 	0x0000
-		.word 	0x0080
+		.word 	0x0000
+		.word 	0x0000
+		.word 	0x0000
+		.word 	0x0000
 		.word 	0x0000
 
 G:     					.usect ".vars", 1       	;Forward Gain: Q15
@@ -147,18 +147,20 @@ _flanger_effect:
 *Setup to interpolate
 	AMOV #delay_output+1,  XAR0
 	AMOV #interpol,   XAR1
-*Interpolate a*LO(delayOutput)+y[n-FLOOR(M(n))]
+*Interpolate a*LO(delayOutput)+x[n-FLOOR(M(n))]
 	MPYM uns(*AR0), *AR1, AC0       				;AC0 = a*LO(delayOutput), LO(delayOutput) = fractional part
 	SUB #1, T0           							;Reset T0 to point at y[n-FLOOR(M(n))]
 	ADD *AR6(T0) << #16, AC0       					;AC0 = a*LO(delayOutput)+y[n-FLOOR(M(n))]
 *Setup for flanger effect
 	; AC0 = y[n-M(n)]
 	AMOV #xn, XAR1
-* Calculate flanger effect: y[n] = G * (x[n] + F * y[n-M(n)])
+	AMOV #G, XAR2
+* Calculate flanger effect: y[n] = G * x[n] + F * x[n-M(n)]
 	BSET FRCT
 	MPYM *(#F), AC0
-	ADD *AR1 << #16, AC0
-	MPYM *(#G), AC0
+	MACM *AR2, *AR1, AC0
+	;ADD *AR1 << #16, AC0
+	;MPYM *(#G), AC0
 	ADD *(#noise_shaping), AC0       				;ADD noise shaping
 	MOV HI(AC0), *AR1
 	MOV AC0, *(#noise_shaping)       				;Save noise for next repetition
