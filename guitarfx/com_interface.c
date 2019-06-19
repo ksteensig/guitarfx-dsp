@@ -42,6 +42,7 @@ CSL_Status COMS_SetupI2C( void ){
     status = I2C_setup(&COMS_I2C_setup);
     if(status != CSL_SOK){puts("I2C Setup Failed\n"); return status;} // System OK
     CSL_FINST(i2cHandle->i2cRegs->ICMDR, I2C_ICMDR_STT, SET);
+
     return CSL_SOK;
 
 }
