@@ -45,6 +45,7 @@ _coms_isr:
 	ADD #1, AR0							; Point to second byte
 	OR T1, T0							; Merge first and second byte
 	MOV T0, *AR1+
+	MOV 0x0000, *AR1+
 sorter
 	; ENDLOOP
 

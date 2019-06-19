@@ -5,7 +5,33 @@
 direct_path   	.set 0x4000
 feedback_path  	.set 0x0CCC
 ADCR    		.set 0x002A2D
-voices    		.set 0x0004
+voices    		.set 0x0006
+
+		.ref COM_CONFIG_DMA_SEC
+
+ 		.align 2
+un: 	.word 	0x7FFF      ;HI(un) Start value for sin(n*w)? = 1
+		.word 	0xFFFF      ;LO(un) Start value for sin(n*w) = 1
+		.word	0x7FFF      ;HI(un) Start value for sin(n*w)? = 1
+		.word 	0xFFFF      ;LO(un) Start value for sin(n*w) = 1
+		.word 	0x7FFF      ;HI(un) Start value for sin(n*w)? = 1
+		.word 	0xFFFF      ;LO(un) Start value for sin(n*w) = 1
+		.word 	0x7FFF      ;HI(un) Start value for sin(n*w)? = 1
+		.word 	0xFFFF      ;LO(un) Start value for sin(n*w) = 1
+		.word 	0x7FFF      ;HI(un) Start value for sin(n*w)? = 1
+		.word 	0xFFFF      ;LO(un) Start value for sin(n*w) = 1
+
+		.align 2
+vn: 	.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
+		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
+		.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
+		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
+		.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
+		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
+		.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
+		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
+		.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
+		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
 
 		.sect  ".ivars"      ;Feedback Gain: Q15
  		.align 2
@@ -32,66 +58,17 @@ K2: 	.word 0x0000      ;HI(K2) for voice 0
 		.word 0x0001      ;-- Voice 4
 		.word 0x496B      ;-- Voice 4
 
- 		.align 2
-un: 	.word 	0x7FFF      ;HI(un) Start value for sin(n*w)? = 1
-		.word 	0xFFFF      ;LO(un) Start value for sin(n*w) = 1
-		.word	0x7FFF      ;HI(un) Start value for sin(n*w)? = 1
-		.word 	0xFFFF      ;LO(un) Start value for sin(n*w) = 1
-		.word 	0x7FFF      ;HI(un) Start value for sin(n*w)? = 1
-		.word 	0xFFFF      ;LO(un) Start value for sin(n*w) = 1
-		.word 	0x7FFF      ;HI(un) Start value for sin(n*w)? = 1
-		.word 	0xFFFF      ;LO(un) Start value for sin(n*w) = 1
-		.word 	0x7FFF      ;HI(un) Start value for sin(n*w)? = 1
-		.word 	0xFFFF      ;LO(un) Start value for sin(n*w) = 1
+amp:			.set 0x000206
+F:				.set 0x000212
+bd:				.set 0x00021E
+G:				.set 0x00022A
+aditional_voices: .set 0x06
 
-		.align 2
-vn: 	.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
-		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
-		.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
-		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
-		.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
-		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
-		.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
-		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
-		.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
-		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
-
- 		.align 2
-F: 		.word 	0x3000
-		.word 	0x0000
-		.word 	0x0000
-		.word 	0x0000
-		.word 	0x0000
-
- 		.align 2
-bd:	 	.word	0x0000 		; Base delay is signed: Q16,0
-		.word 	0x0000 		; It is necessary to have long word alignment for delay calculate to work, therefore zero padding is used.
-		.word 	0x02FF
-		.word 	0x0000
-		.word 	0x03FF
-		.word 	0x0000
-		.word 	0x04FF
-		.word 	0x0000
-		.word 	0x05FF
-		.word 	0x0000
-
-		.align 2
-amp:	.word 	0x00FF		; Amplitude is unsigned: Q15,1
-		.word 	0x0000 		; It is necessary to have long word alignment for delay calculate to work, therefore zero padding is used.
-		.word 	0x00E7
-		.word 	0x0000
-		.word 	0x0AB9
-		.word 	0x0000
-		.word 	0x0000
-		.word 	0x0000
-		.word 	0x0000
-		.word 	0x0000
-
-G:     					.usect ".vars", 1       	;Forward Gain: Q15
+;G:     					.usect ".vars", 1       	;Forward Gain: Q15
 delay_output:  			.usect ".vars", 2,2,2
 interpol:   			.usect ".vars", 1  			;Needed so we are able to do a unsigned multiplication
 noise_shaping:  		.usect ".vars", 1
-aditional_voices: 		.usect ".vars", 1
+;aditional_voices: 		.usect ".vars", 1
 		;.ref oscillator_inc32,
 		;.ref un, vn
 		.ref xn
@@ -101,7 +78,7 @@ aditional_voices: 		.usect ".vars", 1
 _flanger_chorus_reset:
 	;MOV #a0, *(#amp)
 	;MOV #b0, *(#bd)
-	MOV #direct_path, *(#G)
+	MOV #direct_path, *(#COM_CONFIG_DMA_SEC + G)
 	;MOV #feedback_path, *(#F)
 	MOV #resetZero, *(#delay_output)
 	MOV #resetZero, *(#delay_output+1)
@@ -115,8 +92,8 @@ delay_calculate: .macro
 	SFTS T0, #1         							;Un is long word aligned, thus amp had to be long word aligned to make the addressing offset long word aligned
 	AMOV #un,      XAR0    							;Un is Q31
 	AMOV #delay_output,  XAR1    					;Out is Q15,32
-	AMOV #amp,    XAR2
-	AMOV #bd,    XAR3
+	AMOV #COM_CONFIG_DMA_SEC + amp,    XAR2
+	AMOV #COM_CONFIG_DMA_SEC + bd,    XAR3
 *Calculate product
 	AMAR *AR0+         								;AR1 = LO(out)
 	MPYM uns(*AR0(T0)), uns(*AR2(T0)), AC1    		;AC1 = Amp * LO(Un)
@@ -154,10 +131,10 @@ _flanger_effect:
 *Setup for flanger effect
 	; AC0 = y[n-M(n)]
 	AMOV #xn, XAR1
-	AMOV #G, XAR2
+	AMOV #COM_CONFIG_DMA_SEC + G, XAR2
 * Calculate flanger effect: y[n] = G * x[n] + F * x[n-M(n)]
 	BSET FRCT
-	MPYM *(#F), AC0
+	MPYM *(#COM_CONFIG_DMA_SEC + F), AC0
 	MACM *AR2, *AR1, AC0
 	;ADD *AR1 << #16, AC0
 	;MPYM *(#G), AC0
@@ -171,7 +148,7 @@ _flanger_effect:
 _chorus_effect:
 *Post increment Oscillator
 	MOV #0, AC3           							;Zero AC3 so initial sum is 0 + voice(BRC0)
-	AMOV #F, XAR4          							;AR4 points to first feedback gain
+	AMOV #COM_CONFIG_DMA_SEC + F, XAR4          							;AR4 points to first feedback gain
 	MOV *(#aditional_voices), BRC0      			;Loop *(#aditional_voices)+1
 	RPTB END          								;Loop everything until lable END, TOO MANY BYTES FOR LOCAL
 	oscillator_inc32        						;Calculate sine value for voice(BRC0)
@@ -193,11 +170,12 @@ _chorus_effect:
 	SUB #1, T0           							;Reset T0 to point at y[n-FLOOR(M(n))]
 	ADD *AR6(T0) << #16, AC0       					;AC0 = a*LO(delayOutput)+y[n-FLOOR(M(n))]
 	MOV BRC0, T0
+	SFTS T0, #1
 	MPYM *AR4(T0), AC0         						;Multiply with feedback gain for each voice
 END ADD AC0 << #1, AC3         						;Sum output of all voices
 
 	AMOV #xn, XAR1
-	MOV *(#G), T1
+	MOV *(#COM_CONFIG_DMA_SEC + G), T1
 	ADD *AR1 << #16, AC3
 	MACM *AR1, T1, AC3
 	SFTS AC3, #1

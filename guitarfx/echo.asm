@@ -2,9 +2,9 @@
  			.align 2
 
 *** Offsets in COM_CONFIG_DMA_SEC
-dl:			.set 0x60
-G:			.set 0x61		;Signed Q15
-D:			.set 0x62		;Signed Q15
+dl:			.set 0x200
+G:			.set 0x202		;Signed Q15
+D:			.set 0x204		;Signed Q15
 
 	.def echo_effect
 	.ref xn, yn, COM_CONFIG_DMA_SEC

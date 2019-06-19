@@ -66,9 +66,9 @@ _isr_func:
 	MOV *AR5, *AR7
 	MOV port(#ADCR), *CDP					; Moves input sample to AC3
 	MOV *CDP, *AR6
-	;CALL _flanger_effect
+	CALL _flanger_effect
 	;CALL _chorus_effect
-	CALL echo_effect
+	;CALL echo_effect
 	AMAR *AR6-
 	MOV.CR *CDP, *AR5-
 	MOV *CDP, port(#DACR)
