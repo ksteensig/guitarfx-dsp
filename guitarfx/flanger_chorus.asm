@@ -2,10 +2,10 @@
 ;b0     .set 0x03e8    ; signed Q16,0
 ;a0     .set 0x07d0    ; unsigned Q15,1
 ;resetZero   	.set 0x0000
-direct_path   	.set 0x7FFF
-feedback_path  	.set 0x9000
+direct_path   	.set 0x4000
+feedback_path  	.set 0x0CCC
 ADCR    		.set 0x002A2D
-voices    		.set 0x0005
+voices    		.set 0x0004
 
 		.sect  ".ivars"      ;Feedback Gain: Q15
  		.align 2
@@ -57,7 +57,7 @@ vn: 	.word 	0x0000      ;HI(vn) Start value for cos(n*w)? = 0
 		.word 	0x0000      ;LO(vn) Start value for cos(n*w) = 0
 
  		.align 2
-F: 		.word 	0x7FFF
+F: 		.word 	0x3000
 		.word 	0x0000
 		.word 	0x0000
 		.word 	0x0000
@@ -76,11 +76,11 @@ bd:	 	.word	0x0000 		; Base delay is signed: Q16,0
 		.word 	0x0000
 
 		.align 2
-amp:	.word 	0x0000		; Amplitude is unsigned: Q15,1
+amp:	.word 	0x00FF		; Amplitude is unsigned: Q15,1
 		.word 	0x0000 		; It is necessary to have long word alignment for delay calculate to work, therefore zero padding is used.
+		.word 	0x00E7
 		.word 	0x0000
-		.word 	0x0000
-		.word 	0x0000
+		.word 	0x0AB9
 		.word 	0x0000
 		.word 	0x0000
 		.word 	0x0000

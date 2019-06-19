@@ -19,7 +19,7 @@ volatile Int16 mono_input;
 
 /* New. Gain as a #define */
 /* Use 30 for microphone. Use 0 for line */
-#define GAIN_IN_dB 0
+#define GAIN_IN_dB 12
 
 unsigned long int i = 0;
 
@@ -36,7 +36,7 @@ extern void flanger_chorus_reset();
  *                                                                          *
  * ------------------------------------------------------------------------ */
 void main( void )
- {
+{
     IRQ_globalDisable();
 
     /* Initialize all effect registers */
